@@ -1,0 +1,282 @@
+---
+title: "Lab: The 12 Days of Christmas"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Packages for Functions
+library(dplyr)
+library(glue)
+library(stringr)
+library(purrr)
+```
+
+
+### A Test Dataset
+
+Run the code below to load up a dataset called `xmas` that contains the crucial 
+information about the gifts in the song. We will use this dataset to test out
+our functions as we work on them.
+
+```{r}
+xmas <- read.csv("https://www.dropbox.com/s/e584pryn8evm1gz/xmas.csv?dl=1")
+```
+
+---
+
+## Step One:  Plurals
+
+Note that the gifts are listed in singular: for example, on day five the
+narrator receives "five golden rings", but the entry in the dataset for the gift
+on day 5 simply says "ring".  
+
+Using the skeleton of the `pluralize_gift()` function, complete the code so that 
+the function takes a gift and returns the appropriate plural. 
+
+```{r}
+# Function that takes a noun and makes it plural
+# Arguments -- gift -- A string or vector of strings
+# Return -- A string or vector of strings with the pluralized words
+
+pluralize_gift <- function(gift){
+
+gift <- gift %>%
+  str_replace()
+
+return(gift)
+
+}
+```
+
+*Hint 1:* Note that the gifts on days six and nine have unusual pluralizations.
+You may assume that in other datasets, there will be no special cases besides
+these types.
+
+*Hint 2:*  The following small example may be useful to you:
+
+```{r, eval = TRUE}
+my_names <- c("Kimberly", "Trini", "Jason", "Billy", "Zach", "Tommy")
+
+my_names %>% 
+  str_replace("y$", "ies")
+```
+
+
+**Important:**  You should **absolutely not** "hard-code" anything into this 
+function; this function should work in general, not just for the items in the
+12 Days of Christmas.  For example, the word "rings" should not appear anywhere
+in the function.  I should be able to give it any gift and any day, and get back
+the plural of that gift.
+
+
+### Test Your Function
+
+Try your function out on the gifts in the dataset.  
+(Consider: is your function *vectorized*?  It does not have to be, but it may
+make things simpler!)
+
+```{r}
+
+pluralize_gift(xmas$Gift.Item)
+
+purrr::map_chr(xmas$Gift.Item, pluralize_gift)
+
+```
+
+
+---
+
+
+## Step Two: Creating sentences
+
+Write a function called `make_phrase` that takes as input the necessary information, 
+and returns a phrase.  For example, 
+
+```{r}
+make_phrase(num = 10, 
+            num_word = "ten", 
+            item = "lords", 
+            verb = "a-leaping", 
+            adjective = "", 
+            location = "")
+```
+
+should return
+
+```
+"ten lords a-leaping"
+```
+
+```{r}
+make_phrase <- function(num, num_word, item, verb, adjective, location) {
+  
+  ## Step 1: Replace NAs with blank strings
+  verb <- str_replace_na(verb, "")
+  
+  ## Step 2: Pluralize the gift if needed
+  ## Items with numbers larger than 1 should be pluralized
+  ## Single items starting with a vowel should have "an" in front
+  ## All other single items should have "a" in front
+  
+  vowel_start <- str_sub(item, 1, 1) %>% str_detect(___)
+  
+  if (___) {
+    
+    item <- pluralize_gift(item)
+    
+  } else if (vowel_start) {
+  
+      
+    
+  } else {
+    
+    
+    
+  }
+  
+  glue::glue("{num_word} {adjective} {item} {verb} {location}") %>%
+    str_squish()
+  
+  
+}
+```
+
+
+# Test Your Function
+
+Try your function out on the `xmas` data, by making a new variable containing
+the daily phrases.
+
+**Hint:** The `Day.in.Words` variable isn't quite what you want! You want `12`
+to say `"twelve"` **not** `"twelfth"`. I suggest using the **english** package
+to create numbered days and then use those in your `pmap_chr()`!
+
+```{r}
+xmas <- xmas %>%
+  mutate(
+    Full.Phrase = pmap_chr(list(___), 
+                           make_phrase)
+  )
+```
+
+
+---
+
+
+## Step Three:  Iteration.
+
+Write a function called `sing_line` that takes as input:
+
+* A dataset
+
+* A number indicating which day to sing about
+
+* The name of a column in the dataset that contains the phrases for each day.
+
+```{r}
+# Produces the string for one day of the song.
+# Arguments -- dataset -- A data frame containing information about gifts
+# Arguments -- line -- The number of the line for the day you want to sing about
+# Arguments -- phrase_col -- The variable name for the column in the dataset that contains the gift phrases
+# Return -- A string singing the line of the song with all gifts for the given day.
+
+sing_day <- function(dataset, line, phrase_col){
+  
+  # Step 1: Setup the intro line
+  
+  num_word <- ____
+  
+  intro <- glue::glue("On the {num_word} day of Christmas")
+  
+  # Step 2: Sing the gift phrases
+
+    phrases <- dataset %>% 
+      pull({{phrase_col}})
+
+  ????
+    
+  ## put it together
+    
+  ????
+
+
+}
+
+
+```
+
+For example,
+
+
+```{r}
+sing_line(xmas, 
+          num = 2, 
+          phrase_col = Full.Phrase)
+
+```
+
+should return
+
+```
+On the second day of Christmas, my true love sent to me,
+two turtle doves 
+and a partridge in a pear tree.
+```
+
+*Hint:*  The `{{phrase_col}}` part, which I provided for you, lets you use 
+column names as arguments to a function.  Don't delete that line of code!
+
+---
+
+## Step Four: Use Your Functions!
+
+Run the following code to test out your functions! The ouput should be the 
+lyrics for the entire 12 Days of Christmas song. 
+
+```{r}
+xmas2 <- xmas %>%
+  mutate(
+    day.num = as.character(english::english(Day)), 
+    Full.Phrase = pmap_chr(list(num = Day, 
+                                num_word = day.num, 
+                                item = Gift.Item, 
+                                verb = Verb, 
+                                adjective = Adjective, 
+                                location = Location), 
+                           make_phrase)
+  )
+
+map_chr(1:12, ~sing_line(xmas2, .x, Full.Phrase)) %>%
+  str_c(collapse = "\n") %>%
+  cat()
+
+```
+
+
+## Step Five: Show Me Your Work! 
+
+#### Get it on GitHub
+
+Once you are done with all the functions, make sure you have **pushed** your
+work to GitHub.
+
+Make sure your repository contains your completed RMarkdown document and
+knitted HTML. 
+
+- Your HTML should **only** show the code for your functions and output from 
+testing / verifying that your functions perform as they should. 
+
+__If you used GitHub to store your work:__
+
+Submit the link to your GitHub repository in the Lab 8 assignment portal. 
+
+__If you downloaded the compressed folder and did not use GitHub:__
+
+Submit **both** your RMarkdown file and knitted HTML file
+

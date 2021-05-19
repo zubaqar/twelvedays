@@ -1,2 +1,5 @@
-# twelvedays
-Code to output gifts for twelve days of Christmas
+
+# Twelve Days of Christmas 
+
+Materials for writing functions to output the lyrics for the Twelve Days of 
+Christmas. 
