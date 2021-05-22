@@ -225,20 +225,5 @@ map_chr(1:12, ~sing_line(xmas2, .x, Full.Phrase)) %>%
 
 #### Get it on GitHub
 
-Once you are done with all the functions, make sure you have **pushed** your
-work to GitHub.
-
-Make sure your repository contains your completed RMarkdown document and
-knitted HTML. 
-
-- Your HTML should **only** show the code for your functions and output from 
-testing / verifying that your functions perform as they should. 
-
-__If you used GitHub to store your work:__
-
-Submit the link to your GitHub repository in the Lab 8 assignment portal. 
-
-__If you downloaded the compressed folder and did not use GitHub:__
-
-Submit **both** your RMarkdown file and knitted HTML file
+Github repository: https://github.com/zubaqar/twelvedays
 
