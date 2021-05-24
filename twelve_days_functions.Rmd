@@ -70,11 +70,7 @@ return(gift)
 
 
 ```{r}
-
-
-
 purrr::map_chr(xmas$Gift.Item, pluralize_gift)
-
 ```
 
 
@@ -119,7 +115,9 @@ make_phrase <- function(num, num_word, item, verb, adjective, location) {
 
 
 ```{r}
+# add column to the existing dataset with the correct phrase for that day, using the make _phrase function we created
 xmas <- xmas %>%
+  #using the english package to turn the Day number into a word
   mutate(day.num = as.english(Day),
     Full.Phrase = pmap_chr(list(num = Day, num_word = as.english(Day), item = Gift.Item, verb = Verb, adjective = Adjective, location = Location), 
                            make_phrase)

@@ -197,11 +197,13 @@ a.sourceLine {
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">&quot;{num_word} {adjective} {item} {verb} {location}&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_squish</span>())</span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>xmas <span class="ot">&lt;-</span> xmas <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">day.num =</span> <span class="fu">as.english</span>(Day),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Full.Phrase =</span> <span class="fu">pmap_chr</span>(<span class="fu">list</span>(<span class="at">num =</span> Day, <span class="at">num_word =</span> <span class="fu">as.english</span>(Day), <span class="at">item =</span> Gift.Item, <span class="at">verb =</span> Verb, <span class="at">adjective =</span> Adjective, <span class="at">location =</span> Location), </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                           make_phrase)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add column to the existing dataset with the correct phrase for that day, using the make _phrase function we created</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>xmas <span class="ot">&lt;-</span> xmas <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#using the english package to turn the Day number into a word</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">day.num =</span> <span class="fu">as.english</span>(Day),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Full.Phrase =</span> <span class="fu">pmap_chr</span>(<span class="fu">list</span>(<span class="at">num =</span> Day, <span class="at">num_word =</span> <span class="fu">as.english</span>(Day), <span class="at">item =</span> Gift.Item, <span class="at">verb =</span> Verb, <span class="at">adjective =</span> Adjective, <span class="at">location =</span> Location), </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                           make_phrase)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <hr />
 </div>
 <div id="step-three-iteration." class="section level2">
